@@ -2765,12 +2765,12 @@ public fw_PlayerKilled(victim, attacker, shouldgib)
 					message_end();
 				}
 			}
-			// When killed by an Assassin victim is cut in pieces
-			else if ( g_assassin[ attacker ] )
-			{
-				if (get_pcvar_num(cvar_nemfraggore))
-					SetHamParamInteger(3, 2)
-			}
+		}
+		// When killed by an Assassin victim is cut in pieces
+		else if ( g_assassin[ attacker ] )
+		{
+			if (get_pcvar_num(cvar_nemfraggore))
+				SetHamParamInteger(3, 2)
 		}
 	}
 }
