@@ -11,5 +11,9 @@ All the changes are experimental and might not be stable.
 ```
    native: zp_consecutive_normalrounds( )
 ```
+- Added a native which returns the current gameplay mode
+```
+   native: zp_get_current_mode( )
+```
 - Full nade support for bots, including Bombardiers (credits to abdul-rehman)
 - Fixed: Gore effect for humans killed by an Assassin
