@@ -554,6 +554,7 @@ new g_swarmround // swarm round
 new g_plagueround // plague round
 new g_survround // survivor round
 new g_modestarted // mode fully started
+new g_currentmode // current mode
 new g_lastmode // last played mode
 new g_consecutive_normalrounds; // normal rounds played since the last special mode
 new g_scorezombies, g_scorehumans, g_gamecommencing // team scores
@@ -807,7 +808,8 @@ public plugin_natives()
 	register_native("zp_get_bombardier_count", "native_get_bombardier_count", 1)
 	register_native("zp_is_lnj_round", "native_is_lnj_round", 1)
 	register_native( "zp_get_last_mode", "native_get_last_mode", 1 );
-	register_native( "zp_consecutive_normal_rounds", "native_consecutive_normal_rounds", 1 );
+	register_native( "zp_get_current_mode", "native_get_current_mode", 1 );
+	register_native( "zp_consecutive_normal_rounds", "native_consecutive_normalrounds", 1 );
 	
 	// External additions natives
 	register_native("zp_register_extra_item", "native_register_extra_item", 1)
@@ -2102,6 +2104,7 @@ public event_round_start()
 	g_bombardierround = false
 	g_modestarted = false
 	g_lnjround = false
+	g_currentmode = MODE_NONE;
 	
 	// Reset bought infection bombs counter
 	g_infbombcounter = 0
@@ -6519,6 +6522,7 @@ make_a_zombie(mode, id)
 			// Survivor Mode
 			g_survround = true
 			g_lastmode = MODE_SURVIVOR
+			g_currentmode = MODE_SURVIVOR;
 			g_consecutive_normalrounds = 0;
 		
 			// Choose player randomly?
@@ -6565,6 +6569,7 @@ make_a_zombie(mode, id)
 			// Swarm Mode
 			g_swarmround = true
 			g_lastmode = MODE_SWARM
+			g_currentmode = MODE_SWARM;
 			g_consecutive_normalrounds = 0;
 		
 			// Make sure there are alive players on both teams (BUGFIX)
@@ -6618,6 +6623,7 @@ make_a_zombie(mode, id)
 		{
 			// Multi Infection Mode
 			g_lastmode = MODE_MULTI
+			g_currentmode = MODE_MULTI;
 			g_consecutive_normalrounds = 0;
 		
 			// iMaxZombies is rounded up, in case there aren't enough players
@@ -6681,6 +6687,7 @@ make_a_zombie(mode, id)
 			// Plague Mode
 			g_plagueround = true
 			g_lastmode = MODE_PLAGUE
+			g_currentmode = MODE_PLAGUE;
 			g_consecutive_normalrounds = 0;
 		
 			// Turn specified amount of players into Survivors
@@ -6785,6 +6792,7 @@ make_a_zombie(mode, id)
 			// Sniper Mode
 			g_sniperround = true
 			g_lastmode = MODE_SNIPER
+			g_currentmode = MODE_SNIPER;
 			g_consecutive_normalrounds = 0;
 		
 			// Choose player randomly?
@@ -6833,6 +6841,7 @@ make_a_zombie(mode, id)
 			// Assassin Mode
 			g_assassinround = true
 			g_lastmode = MODE_ASSASSIN
+			g_currentmode = MODE_ASSASSIN;
 			g_consecutive_normalrounds = 0;
 		
 			// Choose player randomly?
@@ -6908,6 +6917,7 @@ make_a_zombie(mode, id)
 			// Bombardier Mode
 			g_bombardierround = true
 			g_lastmode = MODE_BOMBARDIER
+			g_currentmode = MODE_BOMBARDIER;
 			g_consecutive_normalrounds = 0;
 		
 			// Choose player randomly?
@@ -6975,6 +6985,7 @@ make_a_zombie(mode, id)
 			// Armageddon Mode
 			g_lnjround = true
 			g_lastmode = MODE_LNJ
+			g_currentmode = MODE_LNJ;
 			g_consecutive_normalrounds = 0;
 		
 			// iMaxZombies is rounded up, in case there aren't enough players
@@ -7043,6 +7054,7 @@ make_a_zombie(mode, id)
 				// Nemesis Mode
 				g_nemround = true
 				g_lastmode = MODE_NEMESIS
+				g_currentmode = MODE_NEMESIS;
 				g_consecutive_normalrounds = 0;
 			
 				// Turn player into nemesis
@@ -7120,6 +7132,7 @@ make_a_zombie(mode, id)
 
 		// Single Infection Mode
 		g_lastmode = MODE_INFECTION
+		g_currentmode = MODE_INFECTION;
 			
 		// Turn player into the first zombie
 		zombieme(id, 0, 0, 0, 0, 0)
@@ -12645,8 +12658,14 @@ public native_get_last_mode( )
 	return g_lastmode;
 }
 
+// Native: zp_get_current_mode
+public native_get_current_mode( )
+{
+	return g_currentmode;
+}
+
 // Native: zp_consecutive_normal_rounds
-public native_consecutive_normal_rounds( )
+public native_consecutive_normalrounds( )
 {
 	return g_consecutive_normalrounds;
 }

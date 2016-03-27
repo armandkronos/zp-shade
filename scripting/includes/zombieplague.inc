@@ -444,7 +444,14 @@ native zp_is_lnj_round()
  *
  * @return		Last played mode.
  */
-native zp_get_last_mode()
+native zp_get_last_mode( )
+
+/**
+ * Returns the current mode.
+ * 
+ * @return		Current mode.
+ */
+native zp_get_current_mode( )
 
 /**
  * Returns the number of consecutive normal rounds played since the last special mode.
