@@ -66,10 +66,13 @@
 	-*-   Changelog    -*
 	----------------------
 
-	* ZPS v1.1.2 - Bombardier Branch - 26.03.2016
+	* ZPS v1.1.2 - Bombardier Branch - 27.03.2016
 	- Added a native which returns the number of consecutive normal rounds played since the last special mode
 	    # native: zp_consecutive_normalrounds( )
+	- Added a native which returns the current gameplay mode
+	    # native: zp_get_current_mode( )
 	- Full nade support for bots, including Bombardiers (credits to abdul-rehman)
+	- Fixed: Gore effect for humans killed by an Assassin
 
 	* ZPS v1.1 - Bombardier Branch - 15.12.2014
 	- Small improvements regarding item restrictions (less CPU usage)
@@ -179,7 +182,7 @@ const MAX_STATS_SAVED = 64
 =================================================================================*/
 
 // Plugin Version
-new const PLUGIN_VERSION[] = "1.1.2-alpha"
+new const PLUGIN_VERSION[] = "1.1.3-alpha"
 
 // Customization file sections
 enum
@@ -2104,6 +2107,7 @@ public event_round_start()
 	g_bombardierround = false
 	g_modestarted = false
 	g_lnjround = false
+	g_lastmode = g_currentmode;
 	g_currentmode = MODE_NONE;
 	
 	// Reset bought infection bombs counter
@@ -6521,7 +6525,6 @@ make_a_zombie(mode, id)
 		{
 			// Survivor Mode
 			g_survround = true
-			g_lastmode = MODE_SURVIVOR
 			g_currentmode = MODE_SURVIVOR;
 			g_consecutive_normalrounds = 0;
 		
@@ -6568,7 +6571,6 @@ make_a_zombie(mode, id)
 		{		
 			// Swarm Mode
 			g_swarmround = true
-			g_lastmode = MODE_SWARM
 			g_currentmode = MODE_SWARM;
 			g_consecutive_normalrounds = 0;
 		
@@ -6622,7 +6624,6 @@ make_a_zombie(mode, id)
 		else if ((mode == MODE_NONE && (!get_pcvar_num(cvar_preventconsecutive) || g_lastmode != MODE_MULTI) && random_num(1, get_pcvar_num(cvar_multichance)) == get_pcvar_num(cvar_multi) && floatround(iPlayersnum*get_pcvar_float(cvar_multiratio), floatround_ceil) >= 2 && floatround(iPlayersnum*get_pcvar_float(cvar_multiratio), floatround_ceil) < iPlayersnum && iPlayersnum >= get_pcvar_num(cvar_multiminplayers)) || mode == MODE_MULTI )
 		{
 			// Multi Infection Mode
-			g_lastmode = MODE_MULTI
 			g_currentmode = MODE_MULTI;
 			g_consecutive_normalrounds = 0;
 		
@@ -6686,7 +6687,6 @@ make_a_zombie(mode, id)
 		{
 			// Plague Mode
 			g_plagueround = true
-			g_lastmode = MODE_PLAGUE
 			g_currentmode = MODE_PLAGUE;
 			g_consecutive_normalrounds = 0;
 		
@@ -6791,7 +6791,6 @@ make_a_zombie(mode, id)
 		{
 			// Sniper Mode
 			g_sniperround = true
-			g_lastmode = MODE_SNIPER
 			g_currentmode = MODE_SNIPER;
 			g_consecutive_normalrounds = 0;
 		
@@ -6840,7 +6839,6 @@ make_a_zombie(mode, id)
 			static ent
 			// Assassin Mode
 			g_assassinround = true
-			g_lastmode = MODE_ASSASSIN
 			g_currentmode = MODE_ASSASSIN;
 			g_consecutive_normalrounds = 0;
 		
@@ -6916,7 +6914,6 @@ make_a_zombie(mode, id)
 		{
 			// Bombardier Mode
 			g_bombardierround = true
-			g_lastmode = MODE_BOMBARDIER
 			g_currentmode = MODE_BOMBARDIER;
 			g_consecutive_normalrounds = 0;
 		
@@ -6984,7 +6981,6 @@ make_a_zombie(mode, id)
 		{
 			// Armageddon Mode
 			g_lnjround = true
-			g_lastmode = MODE_LNJ
 			g_currentmode = MODE_LNJ;
 			g_consecutive_normalrounds = 0;
 		
@@ -7053,7 +7049,6 @@ make_a_zombie(mode, id)
 			{
 				// Nemesis Mode
 				g_nemround = true
-				g_lastmode = MODE_NEMESIS
 				g_currentmode = MODE_NEMESIS;
 				g_consecutive_normalrounds = 0;
 			
@@ -7063,8 +7058,6 @@ make_a_zombie(mode, id)
 			else
 			{
 				// Single Infection Mode
-				g_lastmode = MODE_INFECTION
-			
 				// Turn player into the first zombie
 				zombieme(id, 0, 0, 0, 0, 0)
 			}
@@ -7131,7 +7124,6 @@ make_a_zombie(mode, id)
 		forward_id = id
 
 		// Single Infection Mode
-		g_lastmode = MODE_INFECTION
 		g_currentmode = MODE_INFECTION;
 			
 		// Turn player into the first zombie
