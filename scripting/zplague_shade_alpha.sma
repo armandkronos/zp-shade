@@ -318,7 +318,8 @@ enum
 	MODE_SNIPER,
 	MODE_ASSASSIN,
 	MODE_BOMBARDIER,
-	MODE_LNJ
+	MODE_LNJ,
+	MODE_CUSTOM
 }
 
 // Restriction types
@@ -599,6 +600,10 @@ new db_ammopacks[MAX_STATS_SAVED] // ammo pack count
 new db_zombieclass[MAX_STATS_SAVED] // zombie class
 new db_slot_i // additional saved slots counter (should start on maxplayers+1)
 
+// Gameplay modes vars
+new Array:g_gamemode_name; // caption
+new g_gamemode_i = MODE_CUSTOM; // loaded gameplay modes counter 
+
 // Extra Items vars
 new Array:g_extraitem_name // caption
 new Array:g_extraitem_cost // cost
@@ -815,6 +820,7 @@ public plugin_natives()
 	register_native( "zp_consecutive_normal_rounds", "native_consecutive_normalrounds", 1 );
 	
 	// External additions natives
+	register_native( "zp_register_game_mode", "native_register_game_mode", 1 );
 	register_native("zp_register_extra_item", "native_register_extra_item", 1)
 	register_native("zp_register_zombie_class", "native_register_zombie_class", 1)
 	register_native("zp_get_extra_item_id", "native_get_extra_item_id", 1)
@@ -907,6 +913,7 @@ public plugin_precache()
 	lights_thunder = ArrayCreate(32, 1)
 	zombie_decals = ArrayCreate(1, 1)
 	g_objective_ents = ArrayCreate(32, 1)
+	g_gamemode_name = ArrayCreate( 32, 1 );
 	g_extraitem_name = ArrayCreate(32, 1)
 	g_extraitem_cost = ArrayCreate(1, 1)
 	g_extraitem_team = ArrayCreate(1, 1)
@@ -12660,6 +12667,33 @@ public native_get_current_mode( )
 public native_consecutive_normalrounds( )
 {
 	return g_consecutive_normalrounds;
+}
+
+// Native: zp_register_gamemode
+public native_register_game_mode( const name[ ] )
+{
+	// ZP disabled
+	if ( !g_pluginenabled )
+		return -1;
+	
+	// Arrays not yet initialized
+	if ( !g_arrays_created )
+	{
+		log_error(AMX_ERR_NATIVE, "[ZP] Can't register gameplay mode yet (%s)", name)
+		return -1;
+	}
+		
+	// Strings passed byref
+	param_convert( 1 );
+	
+	// Add the gameplay mode
+	ArrayPushString( g_gamemode_name, name );
+	
+	// Increase registered gameplay modes counter
+	g_gamemode_i++;
+	
+	// Return id under which we registered the gameplay mode
+	return ( g_gamemode_i - 1 );
 }
 
 // Native: zp_register_extra_item
