@@ -1,19 +1,12 @@
 # Zombie Plague Shade - Developer Preview
-## Version: 1.1.2-alpha
+## Version: 1.1.3-alpha
 
 This repository contains the latest changes to Zombie Plague Shade.
 
 All the changes are experimental and might not be stable.
 
+The changelog contains all the changes from the latest official release.
+
 ## Changelog
 
-- Added a native which returns the number of consecutive normal rounds played since the last special mode
-```
-   native: zp_consecutive_normalrounds( )
-```
-- Added a native which returns the current gameplay mode
-```
-   native: zp_get_current_mode( )
-```
-- Full nade support for bots, including Bombardiers (credits to abdul-rehman)
-- Fixed: Gore effect for humans killed by an Assassin
+- Fixed: zp_get_last_mode() was behaving like zp_get_current_mode()
