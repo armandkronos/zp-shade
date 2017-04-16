@@ -3718,7 +3718,7 @@ public fw_CmdStart(id, handle)
 	
 	// This logic looks kinda weird, but it should work in theory...
 	// p = g_zombie[id], q = g_survivor[id], r = g_cached_customflash
-	// ¬(p v q v (¬p ^ r)) <==> ¬p ^ ¬q ^ (p v ¬r)
+	// Â¬(p v q v (Â¬p ^ r)) <==> Â¬p ^ Â¬q ^ (p v Â¬r)
 	if (!g_zombie[id] && !g_survivor[id] && !g_sniper[id] && (g_zombie[id] || !g_cached_customflash))
 		return;
 	
@@ -7909,7 +7909,7 @@ humanme(id, survivor, silentmode, sniper)
 		if (!g_frozen[id])
 		{
 			if (g_survivor[id] && get_pcvar_num(cvar_survglow)) 
-				fm_set_rendering(g_ent_playermodel[id], kRenderFxGlowShell, 0, 10, 255, kRenderNormal, 25)
+				fm_set_rendering(g_ent_playermodel[id], kRenderFxGlowShell, get_pcvar_num(cvar_surv_aura[0]), get_pcvar_num(cvar_surv_aura[1]), get_pcvar_num(cvar_surv_aura[2]), kRenderNormal, 25)
 			else if (g_survivor[id] && !(get_pcvar_num(cvar_survglow))) 
 				fm_set_rendering(g_ent_playermodel[id], kRenderFxGlowShell, 0, 0, 0, kRenderNormal, 25)
 				
@@ -8011,7 +8011,7 @@ humanme(id, survivor, silentmode, sniper)
 		if (!g_frozen[id])
 		{
 			if (g_survivor[id] && get_pcvar_num(cvar_survglow)) 
-				fm_set_rendering(id, kRenderFxGlowShell, 0, 10, 255, kRenderNormal, 25)
+				fm_set_rendering(id, kRenderFxGlowShell, get_pcvar_num(cvar_surv_aura[0]), get_pcvar_num(cvar_surv_aura[1]), get_pcvar_num(cvar_surv_aura[2]), kRenderNormal, 25)
 			else if (g_survivor[id] && !(get_pcvar_num(cvar_survglow))) 
 				fm_set_rendering(id, kRenderFxGlowShell, 0, 0, 0, kRenderNormal, 25)
 				
@@ -10453,7 +10453,7 @@ public remove_freeze(id)
 			fm_set_rendering(g_ent_playermodel[id], kRenderFxGlowShell, 0, 0 , 0, kRenderNormal, 25)
 		
 		else if (g_survivor[id] && get_pcvar_num(cvar_survglow))
-			fm_set_rendering(g_ent_playermodel[id], kRenderFxGlowShell, 0, 10, 255, kRenderNormal, 25)
+			fm_set_rendering(g_ent_playermodel[id], kRenderFxGlowShell, get_pcvar_num(cvar_surv_aura[0]), get_pcvar_num(cvar_surv_aura[1]), get_pcvar_num(cvar_surv_aura[2]), kRenderNormal, 25)
 		else if (g_survivor[id] && !(get_pcvar_num(cvar_survglow)))
 			fm_set_rendering(g_ent_playermodel[id], kRenderFxGlowShell, 0, 0, 0, kRenderNormal, 25)
 		
@@ -10484,7 +10484,7 @@ public remove_freeze(id)
 			fm_set_rendering( id, kRenderFxGlowShell, 0, 0 , 0, kRenderNormal, 25)	
 		
 		else if (g_survivor[id] && get_pcvar_num(cvar_survglow))
-			fm_set_rendering(id, kRenderFxGlowShell, 0, 10, 255, kRenderNormal, 25)
+			fm_set_rendering(id, kRenderFxGlowShell, get_pcvar_num(cvar_surv_aura[0]), get_pcvar_num(cvar_surv_aura[1]), get_pcvar_num(cvar_surv_aura[2]), kRenderNormal, 25)
 		else if (g_survivor[id] && !(get_pcvar_num(cvar_survglow)))
 			fm_set_rendering(id, kRenderFxGlowShell, 0, 0, 0, kRenderNormal, 25)
 		
@@ -12040,7 +12040,8 @@ public native_set_user_frozen(id, set)
 			write_byte(100) // alpha
 			message_end()
 
-			if (pev(id, pev_flags) & FL_ONGROUND)
+
+			if (pev(id, pev_flags) & FL_ONGROUND)
 				set_pev(id, pev_gravity, 999999.9) // set really high
 			else
 				set_pev(id, pev_gravity, 0.000001) // no gravity
@@ -12080,7 +12081,7 @@ public native_set_user_frozen(id, set)
 			else if (g_bombardier[id] && get_pcvar_num( cvar_bombardierglow ) )
 				fm_set_rendering(g_ent_playermodel[id], kRenderFxGlowShell, 255, 140, 0, kRenderNormal, 25)
 			else if (g_survivor[id] && get_pcvar_num(cvar_survglow))
-				fm_set_rendering(g_ent_playermodel[id], kRenderFxGlowShell, 0, 0, 255, kRenderNormal, 25)
+				fm_set_rendering(g_ent_playermodel[id], kRenderFxGlowShell, get_pcvar_num(cvar_surv_aura[0]), get_pcvar_num(cvar_surv_aura[1]), get_pcvar_num(cvar_surv_aura[2]), kRenderNormal, 25)
 			else if (g_sniper[id] && get_pcvar_num(cvar_sniperglow))
 				fm_set_rendering(g_ent_playermodel[id], kRenderFxGlowShell, get_pcvar_num(cvar_snipercolor[0]), get_pcvar_num(cvar_snipercolor[1]), get_pcvar_num(cvar_snipercolor[2]), kRenderNormal, 25)
 			else
@@ -12094,8 +12095,8 @@ public native_set_user_frozen(id, set)
 				fm_set_rendering(id, kRenderFxGlowShell, 250, 0, 0, kRenderNormal, 25)
 			else if (g_bombardier[id] && get_pcvar_num( cvar_bombardierglow ) )
 				fm_set_rendering(id, kRenderFxGlowShell, 255, 140, 0, kRenderNormal, 25)	
-			else if (g_survivor[id] && get_pcvar_num(cvar_survglow))
-				fm_set_rendering(id, kRenderFxGlowShell, 0, 0, 255, kRenderNormal, 25)
+			else 
+				fm_set_rendering(id, kRenderFxGlowShell, get_pcvar_num(cvar_surv_aura[0]), get_pcvar_num(cvar_surv_aura[1]), get_pcvar_num(cvar_surv_aura[2]), kRenderNormal, 25)
 			else if (g_sniper[id] && get_pcvar_num(cvar_sniperglow))
 				fm_set_rendering(id, kRenderFxGlowShell, get_pcvar_num(cvar_snipercolor[0]), get_pcvar_num(cvar_snipercolor[1]), get_pcvar_num(cvar_snipercolor[2]), kRenderNormal, 25)
 			else
