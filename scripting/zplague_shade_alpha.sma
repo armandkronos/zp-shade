@@ -12095,7 +12095,7 @@ public native_set_user_frozen(id, set)
 				fm_set_rendering(id, kRenderFxGlowShell, 250, 0, 0, kRenderNormal, 25)
 			else if (g_bombardier[id] && get_pcvar_num( cvar_bombardierglow ) )
 				fm_set_rendering(id, kRenderFxGlowShell, 255, 140, 0, kRenderNormal, 25)	
-			else 
+			else if (g_survivor[id] && get_pcvar_num(cvar_survglow))
 				fm_set_rendering(id, kRenderFxGlowShell, get_pcvar_num(cvar_surv_aura[0]), get_pcvar_num(cvar_surv_aura[1]), get_pcvar_num(cvar_surv_aura[2]), kRenderNormal, 25)
 			else if (g_sniper[id] && get_pcvar_num(cvar_sniperglow))
 				fm_set_rendering(id, kRenderFxGlowShell, get_pcvar_num(cvar_snipercolor[0]), get_pcvar_num(cvar_snipercolor[1]), get_pcvar_num(cvar_snipercolor[2]), kRenderNormal, 25)
