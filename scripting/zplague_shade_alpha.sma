@@ -7113,7 +7113,7 @@ make_a_zombie(mode, id)
 			else
 			{
 				// Play Normal Infection sound
-				ArrayGetStringsoundNormalInfectionrandom_num(0, ArraySizesoundNormalInfection- 1), sound, charsmax(sound));
+				ArrayGetString(soundNormalInfection, random_num(0, ArraySize(soundNormalInfection) - 1), sound, charsmax(sound));
 				PlaySound(sound);
 
 				// Show First Zombie HUD notice
