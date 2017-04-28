@@ -651,7 +651,7 @@ Array:sound_win_humans, Array:sound_win_no_one, Array:zombie_infect, Array:zombi
 Array:sound_win_zombies_ismp3, Array:sound_win_humans_ismp3, Array:sound_win_no_one_ismp3,
 Array:zombie_pain, Array:nemesis_pain, Array:assassin_pain, Array:bombardier_pain, Array:zombie_die, Array:zombie_fall,
 Array:zombie_miss_wall, Array:zombie_hit_normal, Array:zombie_hit_stab, g_ambience_rain,
-Array:zombie_idle_last, Array:zombie_madness, Array:sound_nemesis, Array:sound_survivor,
+Array:zombie_idle_last, Array:zombie_madness, Array: soundNormalInfection, Array:sound_nemesis, Array:sound_survivor,
 Array:sound_swarm, Array:sound_multi, Array:sound_plague, Array:grenade_infect,
 Array:grenade_infect_player, Array:grenade_fire, Array:grenade_fire_player,
 Array:grenade_frost, Array:grenade_frost_player, Array:grenade_frost_break,
@@ -871,6 +871,7 @@ public plugin_precache()
 	zombie_idle = ArrayCreate(64, 1)
 	zombie_idle_last = ArrayCreate(64, 1)
 	zombie_madness = ArrayCreate(64, 1)
+	soundNormalInfection = ArrayCreate(64, 1);
 	sound_nemesis = ArrayCreate(64, 1)
 	sound_survivor = ArrayCreate(64, 1)
 	sound_swarm = ArrayCreate(64, 1)
@@ -1253,6 +1254,10 @@ public plugin_precache()
 	{
 		ArrayGetString(zombie_madness, i, buffer, charsmax(buffer))
 		engfunc(EngFunc_PrecacheSound, buffer)
+	}
+	for (i = 0; i < ArraySize(soundNormalInfection); i++) {
+		ArrayGetString(soundNormalInfection, i, buffer, charsmax(buffer));
+		engfunc(EngFunc_PrecacheSound, buffer);
 	}
 	for (i = 0; i < ArraySize(sound_nemesis); i++)
 	{
@@ -7107,6 +7112,10 @@ make_a_zombie(mode, id)
 			}
 			else
 			{
+				// Play Normal Infection sound
+				ArrayGetStringsoundNormalInfectionrandom_num(0, ArraySizesoundNormalInfection- 1), sound, charsmax(sound));
+				PlaySound(sound);
+
 				// Show First Zombie HUD notice
 				set_hudmessage(255, 0, 0, HUD_EVENT_X, HUD_EVENT_Y, 0, 0.0, 5.0, 1.0, 1.0, -1)
 				ShowSyncHudMsg(0, g_MsgSync, "%L",LANG_PLAYER, "NOTICE_FIRST", g_playername[forward_id])
@@ -8574,6 +8583,17 @@ load_customization_from_files()
 						
 						// Add to sounds array
 						ArrayPushString(zombie_madness, key)
+					}
+				}
+				else if (equal(key, "ROUND INFECTION")) {
+					// Parse sounds
+					while (value[0] != 0 && strtok(value, key, charsmax(key), value, charsmax(value), ',')) {
+						// Trim spaces
+						trim(key);
+						trim(value);
+						
+						// Add to sounds array
+						ArrayPushString(soundNormalInfection, key);
 					}
 				}
 				else if (equal(key, "ROUND NEMESIS"))
